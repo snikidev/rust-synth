@@ -3,10 +3,10 @@
 > Front-end for the SnowChart AI
 
 # TODO:
-[ ] Install tailwind
-[ ] Install Charts.js
-[ ] Do we need HeroUI?
-[ ] Implement the UX flow
+- [ ] Install tailwind
+- [ ] Install Charts.js
+- [ ] Do we need HeroUI?
+- [ ] Implement the UX flow
 
 ## Template Vite + React + TS docs
 
