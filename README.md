@@ -8,7 +8,7 @@ This repo has 2 folders
 
 ## api
 
-This is a simple starter project made with [uv](https://docs.astral.sh/uv/getting-started/installation/) and [FastAPI](https://docs.astral.sh/uv/guides/integration/fastapi/). 
+This is a simple starter project made with [uv](https://docs.astral.sh/uv/getting-started/installation/) and [FastAPI](https://fastapi.tiangolo.com/#create-it). 
 
 See README inside it for more.
 
