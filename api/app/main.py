@@ -25,7 +25,7 @@ class ValueModel(BaseModel):
 
 def send_to_llm(line):
     messages = [SYSTEM_PROMPT, {"role": "user", "content": line}]
-    response = CLIENT.chat.completions.create(model=DEPLOYMENT_NAME, max_tokens=10, messages=messages)
+    response = CLIENT.chat.completions.create(model=DEPLOYMENT_NAME, max_tokens=1000, messages=messages)
     print(response)
     return [choice.message.content for choice in response.choices]
 
