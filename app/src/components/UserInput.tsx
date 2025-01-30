@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Button, Form } from "@heroui/react";
 import Response from './Response';
+import Loading from './Loading';
 import axios from 'axios';
+
 
 const UserInput: React.FC = () => {
   const [query, setQuery] = useState<string>(''); 
   const [disabled, setDisabled] = useState<boolean>(true);
   const [data, setData] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setDisabled(query.trim() === '');
@@ -18,10 +21,12 @@ const UserInput: React.FC = () => {
 
   const fetchData = async (query: string): Promise<void> => { 
     try {
+      setIsLoading(true);
       const response = await axios.post('/api/string', { value: query }, {
         headers: { "Content-Type": "application/json" },
       });
       setData((prev) => [response.data.data, ...prev]);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching data", error);
     }
@@ -45,7 +50,8 @@ const UserInput: React.FC = () => {
         />
         <Button disabled={disabled}>Search</Button>
       </Form>
-      <Response data={data} />
+
+      {isLoading ? <Loading/> :  <Response data={data} /> }
     </div>
   );
 };
