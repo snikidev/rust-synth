@@ -1,7 +1,21 @@
 from fastapi import File, UploadFile, HTTPException, FastAPI
+from openai import AzureOpenAI
 from pydantic import BaseModel
 import csv
 import io
+
+CLIENT = AzureOpenAI(
+    api_key="G4lYrU7dDLr7MTHcbC9EFnY0d3ibpJn6SKUkUPccnpkIsQATx4xnJQQJ99BAACHYHv6XJ3w3AAAAACOGUVBf",
+    api_version="2024-08-01-preview",
+    azure_endpoint="https://ai-genuinelyinepthub826322430439.openai.azure.com/"
+    )
+
+DEPLOYMENT_NAME='gpt-4o'
+
+SYSTEM_PROMPT = {
+    "role": "system",
+    "content": "You are an ice cream van owner."
+}
 
 app = FastAPI()
 
@@ -9,7 +23,9 @@ class ValueModel(BaseModel):
     value: str
 
 def send_to_llm(line):
-    print("this is a line",line);
+    messages = [SYSTEM_PROMPT, {"role": "user", "content": line}]
+    response = CLIENT.chat.completions.create(model=DEPLOYMENT_NAME, max_tokens=10, messages=messages)
+    return response.choices
 
 @app.get("/healthcheck")
 def healthcheck():
@@ -22,7 +38,8 @@ def root():
 @app.post("/api/string")
 def read_root(value_model: ValueModel):
     print(f"Received value: {value_model.value}")
-    return {"data": value_model.value}
+    messages = send_to_llm(value_model.value)
+    return {"data": [message.content for message in messages]}
 
 @app.post("/api/upload")
 async def upload_csv(file: UploadFile = File(...)):
