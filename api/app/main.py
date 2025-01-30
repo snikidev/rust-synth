@@ -1,17 +1,35 @@
-from fastapi import FastAPI
+from fastapi import File, UploadFile, HTTPException, FastAPI
+from pydantic import BaseModel
+import csv
+import io
 
 app = FastAPI()
 
+class ValueModel(BaseModel):
+    value: str
 
-@app.post("/api/chart")
-def read_root():
-    # Receive POST request with body {value: "Compare performance of 2 campaigns XXX and YYY and put them both in a line chart with X axis being X and Y axis being Y"}
-    
-    # [sql_statement, chart_type] = generate_sql_statement(request.body.value) - Should have prompt template with all the tables and columns described and slot for the request + type of the chart
+def send_to_llm(line):
+    print("this is a line",line);
 
-    # data_from_sql = get_snowflake_data(sql_statement) - REST API call to Snowflake
+@app.get("/healthcheck")
+def healthcheck():
+    return {"status": "ok"}
 
-    # formatted_data = snowflake_to_json(data_from_sql) - AI call to format the data. Args: sql data, chart type. Should have data about Chart.js API.
+@app.get("/")
+def root():
+    return {"message": "Hello World"}
 
-    # return {data: formatted_data} - Should return the data in the format that the frontend can use to render the chart
-    return {"data": null}
+@app.post("/api/string")
+def read_root(value_model: ValueModel):
+    print(f"Received value: {value_model.value}")
+    return {"data": value_model.value}
+
+@app.post("/api/upload")
+async def upload_csv(file: UploadFile = File(...)):
+    contents = await file.read()
+    decoded_content = contents.decode("utf-8")
+    reader = csv.reader(io.StringIO(decoded_content))
+    data = [row for row in reader]
+    for line in data:
+        send_to_llm(line)
+    return {"message": "CSV processed", "data": data}
