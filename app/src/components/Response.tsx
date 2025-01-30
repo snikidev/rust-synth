@@ -1,16 +1,12 @@
 type ResponseProps = {
-    data: string[];
+    data: string;
 }
 
 const Response: React.FC<ResponseProps> = ({data}) => {
 
 return (
     <div className="response-container">
-        {data.map((value, index) => (
-            <div key={index} className="response">
-                {value}
-            </div>
-        ))}
+       <p>{data}</p>
     </div>
 )
 }

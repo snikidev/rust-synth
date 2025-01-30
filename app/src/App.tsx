@@ -1,4 +1,4 @@
-import './app.css'
+import './App.css'
 import UserInput from "./components/UserInput"
 import CSVUpload from "./components/CSVUpload"
 

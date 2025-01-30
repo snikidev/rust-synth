@@ -1,9 +1,11 @@
 import { useDropzone } from 'react-dropzone';
 import { useState } from 'react';
 import axios from 'axios';
+import { CircularProgress } from '@heroui/react';
 
-export default function CsvUpload() {
+export default function CSVUpload() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false); 
   
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: { "text/csv": [".csv"] },
@@ -21,15 +23,18 @@ export default function CsvUpload() {
     const formData = new FormData();
     formData.append("file", selectedFile);
     
+    setLoading(true);
+    
     try {
       const response = await axios.post("/api/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("File uploaded successfully", response.data);
-      alert("File uploaded successfully!");
+      setLoading(false);
     } catch (error) {
       console.error("Upload failed", error);
-      alert("Upload failed, please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -39,15 +44,23 @@ export default function CsvUpload() {
         <input {...getInputProps()} />
         <button type="button">Drag and drop, or click to attach CSV file</button>
       </form>
+      
       {selectedFile && (
-      <aside>
-      <h4>Files to upload</h4>
-        {acceptedFiles.map(file => (
-          <p key={file.path}>{file.path} - {file.size} bytes</p>
-        ))}
-    </aside>
+        <aside>
+          <h4>Files to upload</h4>
+          {acceptedFiles.map(file => (
+            <p key={file.path}>{file.path} - {file.size} bytes</p>
+          ))}
+        </aside>
       )}
-      <button onClick={handleSubmit} disabled={!selectedFile}>Generate Table</button>
+      
+      {loading ? (
+      <CircularProgress aria-label="Loading..." size="lg" />
+    ) : (
+        <button onClick={handleSubmit} disabled={!selectedFile}>
+          Generate Table
+        </button>
+      )}
     </section>
   );
 }
