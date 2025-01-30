@@ -8,8 +8,16 @@ app = FastAPI()
 class ValueModel(BaseModel):
     value: str
 
-def sendToLLM(line):
+def send_to_llm(line):
     print("this is a line",line);
+
+@app.get("/healthcheck")
+def healthcheck():
+    return {"status": "ok"}
+
+@app.get("/")
+def root():
+    return {"message": "Hello World"}
 
 @app.post("/api/string")
 def read_root(value_model: ValueModel):
@@ -23,5 +31,5 @@ async def upload_csv(file: UploadFile = File(...)):
     reader = csv.reader(io.StringIO(decoded_content))
     data = [row for row in reader]
     for line in data:
-        sendToLLM(line)
+        send_to_llm(line)
     return {"message": "CSV processed", "data": data}
