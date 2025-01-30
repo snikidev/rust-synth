@@ -25,7 +25,8 @@ class ValueModel(BaseModel):
 def send_to_llm(line):
     messages = [SYSTEM_PROMPT, {"role": "user", "content": line}]
     response = CLIENT.chat.completions.create(model=DEPLOYMENT_NAME, max_tokens=10, messages=messages)
-    return response.choices
+    print(response)
+    return [choice.message.content for choice in response.choices]
 
 @app.get("/healthcheck")
 def healthcheck():
@@ -39,7 +40,7 @@ def root():
 def read_root(value_model: ValueModel):
     print(f"Received value: {value_model.value}")
     messages = send_to_llm(value_model.value)
-    return {"data": [message.content for message in messages]}
+    return {"data": messages}
 
 @app.post("/api/upload")
 async def upload_csv(file: UploadFile = File(...)):
