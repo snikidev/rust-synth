@@ -10,15 +10,14 @@ import os
 CLIENT = AzureOpenAI(
     api_key=os.environ["OPENAI_API_KEY"],
     api_version=os.environ["OPENAI_API_VERSION"],
-    azure_endpoint=os.environ["OPENAI_API_ENDPOINT"]
-    )
+    azure_endpoint=os.environ["OPENAI_API_ENDPOINT"],
+)
 
 DEPLOYMENT_NAME = "gpt-4o"
 
 SYSTEM_PROMPT = {
     "role": "system",
-    "content": 
-        """
+    "content": """
         Main task: derive the brand name from the string. The string is a title a product sold by Sainsbury's Supermarkets LTD. 
         There are several rules to follow:
         1. The brand name is a part of a title string that you will be provided.
@@ -38,9 +37,7 @@ SYSTEM_PROMPT = {
 
 app = FastAPI()
 
-origins = [
-    "http://localhost:5173"
-]
+origins = ["http://localhost:5173"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -49,6 +46,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 class ValueModel(BaseModel):
     value: str
@@ -61,7 +59,9 @@ class LlmException(Exception):
 def send_to_llm(line):
     messages = [SYSTEM_PROMPT, {"role": "user", "content": line}]
     try:
-        response = CLIENT.chat.completions.create(model=DEPLOYMENT_NAME, max_tokens=1000, messages=messages)
+        response = CLIENT.chat.completions.create(
+            model=DEPLOYMENT_NAME, max_tokens=1000, messages=messages
+        )
     except Exception as e:
         print(f"Error: {e}")
         return {"error": f"API request failed: {str(e)}"}
