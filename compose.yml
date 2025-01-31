@@ -13,7 +13,7 @@ services:
   api:
     build: ./api
     ports:
-      - "8080:8080"
+      - "8000:8000"
     volumes:
       - ./api/app:/api/app
     env_file:
@@ -29,4 +29,4 @@ services:
           path: ./pyproject.toml
     stdin_open: true
     tty: true
-    command: /api/.venv/bin/fastapi run app/main.py --port 8080 --host 0.0.0.0 --reload
+    command: /api/.venv/bin/fastapi run app/main.py --port 8000 --host 0.0.0.0 --reload
