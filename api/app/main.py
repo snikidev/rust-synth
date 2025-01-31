@@ -4,11 +4,12 @@ from openai import AzureOpenAI
 from pydantic import BaseModel
 import csv
 import io
+import os
 
 CLIENT = AzureOpenAI(
-    api_key="G4lYrU7dDLr7MTHcbC9EFnY0d3ibpJn6SKUkUPccnpkIsQATx4xnJQQJ99BAACHYHv6XJ3w3AAAAACOGUVBf",
-    api_version="2024-08-01-preview",
-    azure_endpoint="https://ai-genuinelyinepthub826322430439.openai.azure.com/"
+    api_key=os.environ["OPENAI_API_KEY"],
+    api_version=os.environ["OPENAI_API_VERSION"],
+    azure_endpoint=os.environ["OPENAI_API_ENDPOINT"]
     )
 
 DEPLOYMENT_NAME='gpt-4o'
@@ -39,6 +40,7 @@ def send_to_llm(line):
     messages = [SYSTEM_PROMPT, {"role": "user", "content": line}]
     try:
         response = CLIENT.chat.completions.create(model=DEPLOYMENT_NAME, max_tokens=10, messages=messages)
+        print(f"Response from OpenAI: {response}")
         return response.choices
     except Exception as e:
         print(f"Error: {e}")

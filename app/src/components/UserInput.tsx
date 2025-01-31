@@ -34,7 +34,7 @@ const UserInput: React.FC = () => {
         if (response.data.data && response.data.data.length > 0) {
           setData(response.data.data);
         } else {
-          setData(['No data returned from the API.']);
+          setData([`No data returned from the API. ${response.data.data}`]);
         }
       } else {
         setError(`Unexpected status: ${response.status}`);
