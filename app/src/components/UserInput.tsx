@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Input,
-  Card,
-  CardBody,
-  CardFooter,
-} from "@heroui/react";
+import { Button, Input, Card, CardBody, CardFooter, Chip } from "@heroui/react";
 import axios from "axios";
 
 const UserInput: React.FC = () => {
   const [query, setQuery] = useState<string>("");
   const [disabled, setDisabled] = useState<boolean>(true);
-  const [data, setData] = useState<string | string[]>([]);
+  const [data, setData] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,16 +36,16 @@ const UserInput: React.FC = () => {
         if (response.data.data && response.data.data.length > 0) {
           setData(response.data.data);
         } else {
-          setData([`No data returned from the API. ${response.data.data}`]);
+          setData(`No data returned from the API. ${response.data.data}`);
         }
       } else {
         setError(`Unexpected status: ${response.status}`);
-        setData([]);
+        setData(undefined);
       }
     } catch (error) {
       console.error("Error fetching data", error);
       setError("An error occurred while fetching data. Please try again.");
-      setData([]);
+      setData(undefined);
     } finally {
       setLoading(false);
     }
@@ -64,10 +58,9 @@ const UserInput: React.FC = () => {
 
   return (
     <Card as="form" onSubmit={onSubmit} className="w-1/3">
-      <CardBody className="space-y-4">
-        <h1 className="text-center">App Name</h1>
+      <CardBody className="space-y-4 flex">
+        <h1 className="text-center">MA-Hackathon-Genuinely-Inept</h1>
         <Input
-         
           placeholder="Enter ITEM_NAME"
           type="search"
           size="lg"
@@ -75,12 +68,19 @@ const UserInput: React.FC = () => {
           onChange={onInputChange}
           errorMessage={error}
         />
-
-        <div className="border-3 border-dashed border-gray-100 p-4 rounded-lg text-gray-400 text-sm">
-          {" "}
-          Please, type in ITEM_NAME in the input field and click the "Get Brand"
-          button to get the brand.{" "}
+        <div className="flex justify-center">
+        {data ? (
+          <Chip size="lg" color="primary">
+            {data}
+          </Chip>
+        ) : (
+          <div className="border-3 border-dashed border-gray-100 p-4 rounded-lg text-gray-400 text-sm">
+            Please, type in ITEM_NAME in the input field and click the "Get
+            Brand" button to get the brand.
+          </div>
+        )}
         </div>
+
       </CardBody>
       <CardFooter className="flex justify-end">
         <Button
