@@ -10,16 +10,29 @@ export default {
     "./index.html",
   ],
   theme: {
-    extend: {},
+    extend: {
+      
+    },
   },
   plugins: [
     heroui({
       themes: {
         light: {
-          colors: { primary: "f06c01" }, // light theme colors
+          colors: { 
+            background: "#fff",
+            foreground: "#000",
+            primary: {
+              DEFAULT: "#F06C01",
+              foreground: "#fff",
+            }
+          }, // light theme colors
         },
         dark: {
-          colors: {primary: "f06c01"}, // dark theme colors
+          colors: { 
+            primary: {
+            DEFAULT: "f06c01",
+            foreground: "#000000",
+          }}, // dark theme colors
         },
       },
     }),
