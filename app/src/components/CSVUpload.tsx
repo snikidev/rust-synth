@@ -37,7 +37,7 @@ export default function CSVUpload() {
       setLoading(false);
       const blobFile = new Blob([response.data], { type: "text/csv" });
       const url = window.URL.createObjectURL(blobFile);
-      window.open(url, "_blank");
+      window.open(url, "_top");
     } catch (error) {
       console.error("Upload failed", error);
     } finally {
