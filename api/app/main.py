@@ -95,6 +95,6 @@ async def upload_csv(file: UploadFile = File(...)):
     decoded_content = contents.decode("utf-8")
     reader = csv.reader(io.StringIO(decoded_content))
     data = [row for row in reader]
-    for line in data:
-        send_to_llm(line)
-    return {"message": "CSV processed", "data": data}
+    print([line[0] for line in data])
+    messages = [send_to_llm(line[0]) for line in data]
+    return {"message": "CSV processed", "data": messages}

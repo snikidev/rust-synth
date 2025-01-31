@@ -32,7 +32,7 @@ dependencies = [
     { name = "fastapi", extra = ["standard"] },
     { name = "openai" },
     { name = "pydantic" },
-
+    { name = "python-multipart" },
 ]
 
 [package.metadata]
@@ -40,6 +40,7 @@ requires-dist = [
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115.6" },
     { name = "openai", specifier = ">=1.60.2" },
     { name = "pydantic", specifier = ">=2.10.5" },
+    { name = "python-multipart", specifier = ">=0.0.20" },
 ]
 
 [[package]]
