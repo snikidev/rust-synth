@@ -8,3 +8,4 @@ dependencies = [
     "fastapi[standard]>=0.115.6",
     "openai>=1.60.2",
     "pydantic>=2.10.5",
+]
