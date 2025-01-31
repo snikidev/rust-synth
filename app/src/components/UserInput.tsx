@@ -57,7 +57,7 @@ const UserInput: React.FC = () => {
   };
 
   return (
-    <Card as="form" onSubmit={onSubmit} className="w-1/3">
+    <Card as="form" onSubmit={() => onSubmit} className="w-1/3">
       <CardBody className="space-y-4 flex">
         <h1 className="text-center">MA-Hackathon-Genuinely-Inept</h1>
         <Input
