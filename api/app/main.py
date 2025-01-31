@@ -73,9 +73,11 @@ def send_to_llm(line):
 
 def generate_csv_from_list(data):
     output = io.StringIO()
-    writer = csv.writer(output)
+    fieldnames = ['item name', 'brand']
+    writer = csv.DictWriter(output, fieldnames=fieldnames)
+    writer.writeheader()
     for row in data:
-        writer.writerow([row])
+        writer.writerow(row)
     return output.getvalue()
 
 
