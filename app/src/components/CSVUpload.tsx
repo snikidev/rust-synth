@@ -11,7 +11,7 @@ export default function CSVUpload() {
     accept: { "text/csv": [".csv"] },
     onDrop: (files) => {
       setSelectedFile(files[0]);
-      handleSubmit(files[0]);
+      handleSubmit();
     },
   });
 
