@@ -1,0 +1,15 @@
+meta {
+  name: test file upload
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/api/upload
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  file: @file(/Users/michael.dickinson/repos/snowchart-ai/scripts/data/test_upload.csv)
+}
