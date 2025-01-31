@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-from fastapi import File, UploadFile, HTTPException, FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-=======
 from fastapi import File, UploadFile, FastAPI
->>>>>>> 6b4737a (Create a prompts)
+from fastapi.middleware.cors import CORSMiddleware
 from openai import AzureOpenAI
 from pydantic import BaseModel
 import csv
