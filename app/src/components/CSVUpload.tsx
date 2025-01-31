@@ -26,16 +26,14 @@ export default function CSVUpload() {
     setLoading(true);
     
     try {
-      const response = await axios.post("/api/upload", formData, {
+      const response = await axios.post("http://127.0.0.1:8000/api/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("File uploaded successfully", response.data);
       setLoading(false);
     } catch (error) {
       console.error("Upload failed", error);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   return (
