@@ -53,19 +53,20 @@ class ValueModel(BaseModel):
     value: str
 
 
+class LlmException(Exception):
+    pass
+
+
 def send_to_llm(line):
     messages = [SYSTEM_PROMPT, {"role": "user", "content": line}]
     try:
-        response = CLIENT.chat.completions.create(model=DEPLOYMENT_NAME, max_tokens=10, messages=messages)
-        print(f"Response from OpenAI: {response}")
-        return response.choices
+        response = CLIENT.chat.completions.create(model=DEPLOYMENT_NAME, max_tokens=1000, messages=messages)
     except Exception as e:
         print(f"Error: {e}")
         return {"error": f"API request failed: {str(e)}"}
-    response = CLIENT.chat.completions.create(
-        model=DEPLOYMENT_NAME, max_tokens=1000, messages=messages
-    )
-    print(response)
+    print(f"Response from OpenAI: {response}")
+    if "error" in response.choices:
+        raise LlmException(response.choices["error"])
     return [choice.message.content for choice in response.choices]
 
 
@@ -76,17 +77,12 @@ def healthcheck():
 
 @app.post("/api/string")
 def read_root(value_model: ValueModel):
+    print(f"Received value: {value_model.value}")
     try:
-        print(f"Received value: {value_model.value}")
         messages = send_to_llm(value_model.value)
-        if "error" in messages:
-            return {"error": messages["error"]}
-        return {"data": [message.content for message in messages]}
     except Exception as e:
         print(f"Error: {e}")
         return {"error": str(e)}
-    print(f"Received value: {value_model.value}")
-    messages = send_to_llm(value_model.value)
     return {"data": messages}
 
 
