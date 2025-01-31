@@ -1,5 +1,6 @@
 from fastapi import File, UploadFile, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from openai import AzureOpenAI
 from pydantic import BaseModel
 import csv
@@ -70,6 +71,14 @@ def send_to_llm(line):
     return [choice.message.content for choice in response.choices]
 
 
+def generate_csv_from_list(data):
+    output = io.StringIO()
+    writer = csv.writer(output)
+    for row in data:
+        writer.writerow([row])
+    return output.getvalue()
+
+
 @app.get("/healthcheck")
 def healthcheck():
     return {"status": "ok"}
@@ -91,7 +100,9 @@ async def upload_csv(file: UploadFile = File(...)):
     contents = await file.read()
     decoded_content = contents.decode("utf-8")
     reader = csv.reader(io.StringIO(decoded_content))
-    data = [row for row in reader]
-    print([line[0] for line in data])
-    messages = [send_to_llm(line[0]) for line in data]
-    return {"message": "CSV processed", "data": messages}
+    data = [row[0] for row in reader]
+    print([line for line in data])
+    messages = [{"item name": line, "brand": send_to_llm(line)[0]} for line in data]
+    generated_csv = generate_csv_from_list(messages)
+    return StreamingResponse(generated_csv, media_type="text/csv")
+    # return {"message": "CSV processed", "data": messages}
