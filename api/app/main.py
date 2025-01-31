@@ -73,7 +73,7 @@ def send_to_llm(line):
 
 def generate_csv_from_list(data):
     output = io.StringIO()
-    fieldnames = ['item name', 'brand']
+    fieldnames = ['ITEM_NAME', 'BRAND_NAME']
     writer = csv.DictWriter(output, fieldnames=fieldnames)
     writer.writeheader()
     for row in data:
@@ -104,7 +104,7 @@ async def upload_csv(file: UploadFile = File(...)):
     reader = csv.reader(io.StringIO(decoded_content))
     data = [row[0] for row in reader]
     print([line for line in data])
-    messages = [{"item name": line, "brand": send_to_llm(line)[0]} for line in data]
+    messages = [{"ITEM_NAME": line, "BRAND_NAME": send_to_llm(line)[0]} for line in data]
     generated_csv = generate_csv_from_list(messages)
     return StreamingResponse(
         iter([generated_csv]),
