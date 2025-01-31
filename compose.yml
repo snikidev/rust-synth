@@ -16,6 +16,17 @@ services:
       - "8080:8080"
     volumes:
       - ./api/app:/api/app
+    env_file:
+      - .env.local
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /api
+          ignore:
+            - .venv/
+        - action: rebuild
+          path: ./pyproject.toml
     stdin_open: true
     tty: true
     command: /api/.venv/bin/fastapi run app/main.py --port 8080 --host 0.0.0.0 --reload
