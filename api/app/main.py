@@ -105,4 +105,3 @@ async def upload_csv(file: UploadFile = File(...)):
     messages = [{"item name": line, "brand": send_to_llm(line)[0]} for line in data]
     generated_csv = generate_csv_from_list(messages)
     return StreamingResponse(generated_csv, media_type="text/csv")
-    # return {"message": "CSV processed", "data": messages}
