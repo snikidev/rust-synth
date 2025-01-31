@@ -1,33 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import {Form, Button, Input, CircularProgress} from '@heroui/react';
+import { Form, Button, Input, CircularProgress } from '@heroui/react';
 import Response from './Response';
 import axios from 'axios';
-
 
 const UserInput: React.FC = () => {
   const [query, setQuery] = useState<string>(''); 
   const [disabled, setDisabled] = useState<boolean>(true);
-  const [data, setData] = useState<string>("");
+  const [data, setData] = useState<string | string[]>([]); 
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null); 
 
   useEffect(() => {
-    setDisabled(query.trim() === '');
-  }, [query]);
+    setDisabled(query.trim() === '' || loading);
+  }, [query, loading]);
 
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
   };
 
+
   const fetchData = async (query: string): Promise<void> => { 
+    setError(null); 
     try {
       setLoading(true);
-      const response = await axios.post('/api/string', { value: query }, {
-        headers: { "Content-Type": "application/json" },
+      const response = await axios.post('http://127.0.0.1:8000/api/string', { value: query }, {
+        headers: { 
+          "Content-Type": "application/json",   
+          "Accept": "application/json",
+        },
       });
-      setData(response.data);
-      setLoading(false);
+
+      if (response.status === 200) {
+        if (response.data.data && response.data.data.length > 0) {
+          setData(response.data.data);
+        } else {
+          setData([`No data returned from the API. ${response.data.data}`]);
+        }
+      } else {
+        setError(`Unexpected status: ${response.status}`);
+        setData([]);
+      }
+
     } catch (error) {
       console.error("Error fetching data", error);
+      setError('An error occurred while fetching data. Please try again.');
+      setData([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -37,26 +56,40 @@ const UserInput: React.FC = () => {
   };
 
   return (
-    <div className='user-input-container'>
-      <h1>App Name</h1>
-      <Form className='input-container' onSubmit={onSubmit}>
+    <div className="user-input-container">
+      <h1 className="app-title">App Name</h1>
+      <Form className="input-form" onSubmit={onSubmit}>
         <Input 
-          className="input" 
+          className="input-field" 
           placeholder="Enter your query" 
           type="search" 
           value={query}
           onChange={onInputChange}
         />
         <Button 
-        disabled={disabled}
+          type="submit"
+          className="submit-button"
+          disabled={disabled}
         >
-            Search</Button>
+          {loading ? 'Searching...' : 'Search'}
+        </Button>
       </Form>
 
-      {loading ?  <CircularProgress aria-label="Loading..." size="lg" /> :  <Response data={data} /> }
+      {loading && (
+        <div className="loading-indicator">
+          <CircularProgress aria-label="Loading..." size="lg" />
+        </div>
+      )}
+
+      {error && !loading && (
+        <div className="error-message">
+          <p>{error}</p>
+        </div>
+      )}
+
+      {!loading && !error && <Response data={data} />}
     </div>
   );
 };
 
 export default UserInput;
-

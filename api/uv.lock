@@ -32,6 +32,7 @@ dependencies = [
     { name = "fastapi", extra = ["standard"] },
     { name = "openai" },
     { name = "pydantic" },
+
 ]
 
 [package.metadata]
