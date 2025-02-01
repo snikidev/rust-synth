@@ -1,17 +1,51 @@
-# SnowChart AI
+# MA AI Hackathon: Genuinely Inept
 
-Some initial scaffolding for the hackathon project.
+## Getting Started
 
-This repo has 2 folders 
-- api
-- app
+### Prep
+Crate `.env.local` file in the root of the project with the following values
 
-## api
+```bash
+OPENAI_API_KEY=
+OPENAI_API_VERSION=
+OPENAI_API_ENDPOINT=
+OPENAI_API_DEPLOYMENT_NAME=
+```
 
-This is a simple starter project made with [uv](https://docs.astral.sh/uv/getting-started/installation/) and [FastAPI](https://fastapi.tiangolo.com/#create-it). 
+**NOTE: Deepseek model deployments have different API and are not suitable for this project.**
 
-See README inside it for more.
+### Running with Docker
 
-## app
+This should get all services going for you.
 
-This is a React project based on Vite. See its own README for more as well.
+```bash
+docker compose up -d
+```
+
+### Running projects separately
+
+This repo has 2 parts 
+- `api`
+- `app`
+
+#### `api`
+
+This is back-end part scaffolded with [FastAPI](https://fastapi.tiangolo.com/#create-it) and [uv](https://docs.astral.sh/uv/getting-started/installation/)
+
+To run the project
+
+```bash
+cd api
+uv sync
+uv run --env-file .env.local fasatapi dev
+```
+
+#### `app`
+
+This is a React app with Vite. To run the project
+
+```bash
+cd app
+yarn
+yarn start
+```

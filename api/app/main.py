@@ -13,7 +13,7 @@ CLIENT = AzureOpenAI(
     azure_endpoint=os.environ["OPENAI_API_ENDPOINT"],
 )
 
-DEPLOYMENT_NAME = "gpt-4o"
+DEPLOYMENT_NAME = os.environ["OPENAI_API_DEPLOYMENT_NAME"]
 
 SYSTEM_PROMPT = {
     "role": "system",
