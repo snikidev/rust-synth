@@ -30,9 +30,7 @@ This repo has 2 parts
 
 #### `api`
 
-This is back-end part scaffolded with [FastAPI](https://fastapi.tiangolo.com/#create-it) and [uv](https://docs.astral.sh/uv/getting-started/installation/)
-
-To run the project
+This is back-end part scaffolded with [FastAPI](https://fastapi.tiangolo.com/#create-it) and [uv](https://docs.astral.sh/uv/getting-started/installation/). To run the project
 
 ```bash
 cd api
