@@ -1,24 +1,18 @@
-use actix_web::{post, HttpResponse, Responder};
-
-use crate::utils::llm::init_llm;
-use async_openai::types::CreateCompletionRequestArgs;
+use actix_web::{post, web, HttpResponse, Responder};
+use async_openai::{config::AzureConfig, types::CreateCompletionRequest, Client};
 
 #[post("/api/string")]
-pub async fn api_string(req_body: String) -> impl Responder {
-    let client = init_llm().await;
+pub async fn api_string(
+    data: web::Data<(Client<AzureConfig>, CreateCompletionRequest)>,
+    req_body: String,
+) -> impl Responder {
+    println!("{}", req_body);
     
-    let request = CreateCompletionRequestArgs::default()
-        .model("gpt-3.5-turbo-instruct")
-        .prompt("Tell me the recipe of alfredo pasta")
-        .max_tokens(40_u32)
-        .build()
-        .unwrap();
+    let (client, request) = &**data;
 
-    let response = client
-        .completions() // Get the API "group" (completions, images, etc.) from the client
-        .create(request) // Make the API call in that "group"
-        .await
-        .unwrap();
+    let response = client.completions().create(request.clone()).await.unwrap();
+
+    println!("{}", response.choices.first().unwrap().text);
 
     HttpResponse::Ok().body(req_body)
 }
