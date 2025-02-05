@@ -1,8 +1,8 @@
 use actix_web::{post, web, HttpResponse, Responder};
 use async_openai::{config::AzureConfig, types::CreateCompletionRequest, Client};
 
-#[post("/api/string")]
-pub async fn api_string(
+#[post("/api/brand")]
+pub async fn brand(
     data: web::Data<(Client<AzureConfig>, CreateCompletionRequest)>,
     req_body: String,
 ) -> impl Responder {
